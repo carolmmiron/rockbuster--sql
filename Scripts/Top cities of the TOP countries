@@ -1,0 +1,27 @@
+SELECT E.customer_id,D.country, C.city, SUM(E.amount) AS total_amount_payment 
+FROM payment E
+INNER JOIN customer AS A ON E.customer_id =A.customer_id 
+INNER JOIN address AS B ON A.address_id = B.address_id 
+INNER JOIN city AS C ON C.city_id = B.city_id 
+INNER JOIN country AS D ON D.country_id = C.country_id 
+WHERE C.city IN ( 
+SELECT C.city 
+FROM customer A
+INNER JOIN address AS B ON A.address_id = B.address_id 
+INNER JOIN city AS C ON C.city_id = B.city_id 
+INNER JOIN country AS D ON D.country_id = C.country_id 
+WHERE D.country IN ( 
+SELECT D.country 
+FROM customer A
+INNER JOIN address AS B ON A.address_id = B.address_id 
+INNER JOIN city AS C ON C.city_id = B.city_id 
+INNER JOIN country AS D ON D.country_id = C.country_id 
+GROUP BY D.country 
+ORDER BY COUNT(A.customer_id) DESC 
+LIMIT 10) 
+GROUP BY C.city 
+ORDER BY Count(A.customer_id) DESC 
+LIMIT 10) 
+GROUP BY E.customer_id,D.country, C.city 
+ORDER BY total_amount_payment DESC 
+LIMIT 5;
