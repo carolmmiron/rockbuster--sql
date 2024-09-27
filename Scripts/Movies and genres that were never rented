@@ -1,0 +1,12 @@
+SELECT rating,title,F.name,
+       rental_duration,
+SUM(D.amount) AS total_revenue
+FROM film A
+LEFT JOIN inventory B ON A.film_id = B.film_id
+LEFT JOIN rental C ON B.inventory_id = C.inventory_id
+LEFT JOIN payment D ON C.rental_id = D.rental_id
+LEFT JOIN film_category E ON A.film_id = E.film_id
+LEFT JOIN category F ON E.category_id = F.category_id
+GROUP BY title, rental_duration, F.name,rating
+HAVING SUM(D.amount) IS NULL OR SUM(D.amount) = 0
+ORDER BY title;
