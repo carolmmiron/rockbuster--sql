@@ -1,0 +1,11 @@
+SELECT L.name, CO.Country, COUNT(C.customer_id) AS number_of_customers
+FROM language AS L
+INNER JOIN film AS F ON L.language_id = F.language_id
+INNER JOIN inventory AS I ON F.film_id = I.film_id
+INNER JOIN rental AS R ON I.inventory_id=R.inventory_id
+INNER JOIN customer AS C ON R.customer_id = C.customer_id
+INNER JOIN address AS A ON C.address_id = A.address_id
+INNER JOIN city AS CI ON A.city_id = CI.city_id
+INNER JOIN country AS CO ON CI.country_id = CO.country_id
+GROUP BY CO.Country, L.name
+ORDER BY number_of_customers DESC;
