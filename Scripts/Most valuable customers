@@ -1,0 +1,10 @@
+SELECT
+    CO.country,
+    SUM(P.amount) AS Total_Revenue
+FROM customer AS C
+INNER JOIN address AS A ON C.address_id = A.address_id
+INNER JOIN city AS CI ON A.city_id = CI.city_id
+INNER JOIN country AS CO ON CI.country_id = CO.country_id
+INNER JOIN payment AS P ON C.customer_id = P.customer_id
+GROUP BY CO.country
+ORDER BY Total_Revenue DESC;
