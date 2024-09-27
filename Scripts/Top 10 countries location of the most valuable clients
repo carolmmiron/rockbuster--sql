@@ -1,0 +1,27 @@
+WITH TopMovies AS (
+    SELECT
+        F.title,
+        F.language_id,
+        CAT.name AS movie_genre,
+        CO.country,
+        SUM(P.amount) AS Total_Revenue
+    FROM film AS F
+    INNER JOIN inventory AS I ON F.film_id = I.film_id
+    INNER JOIN rental AS R ON I.inventory_id = R.inventory_id
+    INNER JOIN customer AS C ON R.customer_id = C.customer_id
+    INNER JOIN address AS A ON C.address_id = A.address_id
+    INNER JOIN city AS CI ON A.city_id = CI.city_id
+    INNER JOIN country AS CO ON CI.country_id = CO.country_id
+    INNER JOIN film_category AS FC ON FC.film_id = F.film_id
+    LEFT JOIN category AS CAT ON CAT.category_id = FC.category_id
+    LEFT JOIN payment AS P ON C.customer_id = P.customer_id
+    GROUP BY F.title, F.language_id, CAT.name, CO.country
+    ORDER BY Total_Revenue DESC
+LIMIT 10
+)
+SELECT
+    country,
+    SUM(Total_Revenue) AS Total_Revenue
+FROM TopMovies
+GROUP BY country
+ORDER BY Total_Revenue DESC;
